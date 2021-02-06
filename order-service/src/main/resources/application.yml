@@ -1,0 +1,53 @@
+#server:
+#  port: 7000
+#order:
+#  test-auto-config: 这是自动配置测试2244
+#spring:
+#  application:
+#    name: order-service
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/cloud_video?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false
+#    username: root
+#    password: 111111
+#  zipkin:
+#    base-url: http://127.0.0.1:9411/ #zipkin地址
+#    discovery-client-enabled: false  #不用开启服务发现
+#  sleuth:
+#    sampler:
+#      probability: 1.0 #采样百分比
+#  #格式化日期格式
+#  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+#    time-zone: GMT+8
+#  #nacos配置
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 127.0.0.1:8848
+#    sentinel:
+#      transport:
+#        dashboard: 127.0.0.1:6060
+#        port: 6070
+## feign对sentinel的支持
+#feign:
+#  sentinel:
+#    enabled: true
+## 控制台输出sql、下划线转驼峰
+#mybatis:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    map-underscore-to-camel-case: true
+#
+##  负载均衡策略
+##  策略类	                      命名	             描述
+##  RandomRule	                 随机策略	        随机选择server
+##  RoundRobinRule	            轮询策略	        按照顺序选择server（默认）  如果配置相同建议使用此默认配置  ，可以直接不用配置
+##  RetryRule	                重试策略	        当选择server不成功，短期内尝试选择一个可用的server
+##
+##  AvailabilityFilteringRule	可用过滤策略	        过滤掉一直失败并被标记为circuit tripped的server，过滤掉那些高并发链接的server（active connections超过配置的阈值）
+##  WeightedResponseTimeRule	    响应时间加权重策略	根据server的响应时间分配权重，以响应时间作为权重，响应时间越短的服务器被选中的概率越大，综合了各种因素，比如：网络，磁盘，io等，都直接影响响应时间
+##  ZoneAvoidanceRule	        区域权重策略         综合判断server所在区域的性能，和server的可用性，轮询选择server
+#sales-service:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule

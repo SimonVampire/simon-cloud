@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: sales-service
+  cloud:
+    nacos:
+      config:
+#        server-addr: 10.16.98.105:8848 #Nacos配置中心地址
+        server-addr: 127.0.0.1:8848 #Nacos配置中心地址
+        file-extension: yaml #文件拓展格式
+        namespace: bfbf50e6-7f23-428d-8e8e-833377aabf0c
+#        shared-configs[0]:
+#          data-id: sales-service-dev.yaml
+#          group: SALES_GROUP
+#          refresh: true
+        username: simon
+        password: simon
+        group: SALES_GROUP  #这种有坑，有时候会找不到配置
+  profiles:
+    active: dev
