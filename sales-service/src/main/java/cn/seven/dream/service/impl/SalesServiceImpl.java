@@ -3,6 +3,7 @@ package cn.seven.dream.service.impl;
 import cn.seven.dream.dao.SalesMapper;
 import cn.seven.dream.pojo.Sales;
 import cn.seven.dream.service.SalesService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

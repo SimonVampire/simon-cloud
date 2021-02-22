@@ -3,12 +3,17 @@ package cn.seven.dream.controller;
 import cn.seven.dream.feign.SalesFeign;
 import cn.seven.dream.pojo.Sales;
 import cn.seven.dream.pojo.Order;
+import cn.seven.dream.service.OrderService;
+import io.seata.spring.annotation.GlobalTransactional;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.EmptyStackException;
+import java.util.UUID;
 
 /**
  * @description
@@ -19,17 +24,15 @@ import java.util.Date;
 @RequestMapping("/api/order")
 @RefreshScope /**用于实时刷新配置*/
 public class OrderController {
- /*   @Autowired
-    private DiscoveryClient discoveryClient;*/
-
-/*    @Autowired
-    private RestTemplate restTemplate;*/
 
     @Autowired
     private SalesFeign salesFeign;
 
     @Value("${order.test-auto-config}")
     private String testAutoConfig;
+
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("test_auto_config")
     public String testAutoConfig(){
@@ -44,17 +47,10 @@ public class OrderController {
      * @date 2021/1/28 17:21
      */
     @GetMapping("find_by_sales_id")
-    public Object findBySalesId(int salesId) {
+    public Order findBySalesId(int salesId) {
         Order order = new Order();
         order.setSalesId(salesId);
-
-       /* List<ServiceInstance> list = discoveryClient.getInstances("sales-service");
-
-        ServiceInstance serviceInstance = list.get(0);
-        Sales sales = restTemplate.getForObject("http://sales-service/api/sales/find_by_sales_id?id=" + salesId, Sales.class);*/
-
         Sales sales = salesFeign.findById(salesId);
-        order.setSalesTitle(sales.getName());
         order.setSalesId(sales.getId());
         order.setServerPort(sales.getServerPort());
         return order;
@@ -70,4 +66,43 @@ public class OrderController {
         return salesFeign.findById(sales.getId());
     }
 
+    /**
+     * 有分布式事务控制，无异常
+     * @param sales
+     * @return java.lang.Object
+     * @author zhangxue9
+     * @date 2021/2/22 16:16
+     */
+    @GlobalTransactional
+    @PostMapping("create_order")
+    public Object createOrder(@RequestBody Sales sales){
+        return "新增数量："+orderService.saveOrderBySales(sales);
+    }
+
+    /**
+     * 有分布式事务控制，发生异常
+     * @param sales
+     * @return java.lang.Object
+     * @author zhangxue9
+     * @date 2021/2/22 16:16
+     */
+    @PostMapping("create_tx_error_order")
+    @GlobalTransactional
+    public Object createTxErrorOrder(@RequestBody Sales sales){
+        orderService.saveOrderBySales(sales);
+        throw new EmptyStackException();
+    }
+
+    /**
+     * 无分布式事务控制，发生异常
+     * @param sales
+     * @return java.lang.Object
+     * @author zhangxue9
+     * @date 2021/2/22 16:16
+     */
+    @PostMapping("create_error_order")
+    public Object createErrorOrder(@RequestBody Sales sales){
+        orderService.saveOrderBySales(sales);
+        throw new EmptyStackException();
+    }
 }

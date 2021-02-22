@@ -21,7 +21,8 @@
 ##### sentinel
     https://github.com/alibaba/Sentinel/wiki/%E6%96%B0%E6%89%8B%E6%8C%87%E5%8D%97
 ##### seata
-    https://seata.io/zh-cn/
+    官网 https://seata.io/zh-cn/   
+    脚本和配置 https://github.com/seata/seata/tree/develop/script     
 ##### docker
     https://docs.docker.com/
     https://docs.docker.com/docker-hub/
